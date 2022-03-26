@@ -1,0 +1,34 @@
+name: "Update Data"
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+    branches:
+      - master
+      - main
+  schedule:
+    - cron: '0 23 * * *'
+      
+jobs:
+  update-data:
+    name: Update Data
+    runs-on: "macos-latest"
+    steps:
+      - uses: r-lib/actions/setup-r@v1
+        with:
+          r-version: 'release'
+      - name: Setup - Checkout repo
+        uses: actions/checkout@v2
+      - name: "Setup - Install Packages"
+        run: |
+          install.packages('tidyverse')
+          install.packages('rvest')
+        shell: Rscript {0}
+      - name: "Retrieve Update"
+        run: Rscript 'retrieve_losses.R'
+      - name: "Commit"
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Routine Update
