@@ -1,7 +1,7 @@
 
 pacman::p_load(tidyverse, geomtextpath, lubridate)
 
-ocr_data_new <- T
+ocr_data_new <- F
 
 oryx_data %>% 
   # filter(type != "") %>%
@@ -13,18 +13,20 @@ oryx_data %>%
   # .[12:30,] %>% 
   filter(str_detect(equipment_type, "Tank|Fighting|Personnel|Infantry|Artillery")) %>%
   mutate(equipment_type = fct_reorder(equipment_type, n, .desc = T)) %>% 
-  ggplot(aes(equipment_type, n)) +
+  ggplot(aes(cntry_army, n)) +
   geom_col(aes(fill = cntry_army), position = position_dodge2(width = 0.9)) +
   geom_label(aes(label = n),  position = position_dodge2(width = 0.9)) +
   # coord_flip() +
+  facet_wrap(~equipment_type, nrow = 1, scales = "free_x") +
   hrbrthemes::theme_ipsum() +
   theme(legend.key.size = unit(0.75, 'cm'), #change legend key size
         legend.key.height = unit(0.75, 'cm'), #change legend key height
         legend.key.width = unit(0.75, 'cm'), #change legend key width
         legend.title = element_text(size=21), #change legend title font size
         legend.text = element_text(size=17),
-        legend.position = c(0.87, 0.78), 
+        legend.position = "none", 
         axis.text.x = element_text(face = "bold"),
+        strip.background = element_rect(fill = "lightgrey", color = NA),
         plot.title = element_text(size = 40),
         plot.caption = element_text(size = 18),
         plot.subtitle = element_text(size = 20), 
@@ -35,7 +37,7 @@ oryx_data %>%
   labs(x = "", y = "Lost Equipment", title = "Vehicle and Equipment Losses in Russia-Ukraine War 2022 by Type", subtitle = str_wrap("Lost equipment means: captured, damaged, abandoned and/or destroyed. The data only records vehicle and equipment losses with photographic or videographic evidence. The quantity of actually lost equipment is therefore much higher and the data presented here can be seen as a 'lower bound' estimate for losses. Note: since this relies on publicly shared data there may also be a bias where losses for Ukraine and Russia are underreported or overreported, respectively.", width = 158), caption = glue::glue("Source: Oryxspioenkop. Data available here: https://github.com/favstats/uaconflict_equipmentloss.\nLast updated: {today()}.  Data scraping and visualization: Fabio Votta (@favstats)."))  +
   scale_color_manual(values = c("darkred", "darkblue")) 
 
-ggsave("img/overall_losses.png", width=18, height=10, dpi = 600, bg = "white")
+ggsave("img/overall_losses.png", width=19, height=8, dpi = 600, bg = "white")
 
 
 
@@ -70,7 +72,7 @@ oryx_data %>%
   scale_fill_manual(name = "Country that lost equipment", values = c("darkred", "darkblue")) +
   ggtitle("Losses in Ukraine-Russia conflict") +
   labs(x = "", y = "Lost Equipment", title = "Vehicle and Equipment Losses in Russia-Ukraine War 2022 by Type", subtitle = str_wrap("Lost equipment means: captured, damaged, abandoned and/or destroyed. The data only records vehicle and equipment losses with photographic or videographic evidence. The quantity of actually lost equipment is therefore much higher and the data presented here can be seen as a 'lower bound' estimate for losses. Note: since this relies on publicly shared data there may also be a bias where losses for Ukraine and Russia are underreported or overreported, respectively.", width = 158), caption = glue::glue("Source: Oryxspioenkop. Data available here: https://github.com/favstats/uaconflict_equipmentloss.\nLast updated: {today()}.  Data scraping and visualization: Fabio Votta (@favstats)."))  +
-  scale_color_manual(values = c("darkred", "darkblue")) 
+  scale_color_manual(values = c("darkred", "darkblue"))  
 
 ggsave("img/overall_losses_long.png", width=12, height=15, dpi = 600, bg = "white")
 
@@ -79,13 +81,14 @@ oryx_data %>%
   # filter(type != "") %>%
   filter(str_detect(equipment_type, "Tank")) %>%
   count(cntry_army, status) %>% 
+  mutate(status = ifelse(status == "captured", "lost by capture", status)) %>% 
   arrange(desc(n)) %>% 
   # filter(n > 10) %>% 
   # slice(1:20) %>% 
   # .[-21,] %>% 
   # .[12:30,] %>% 
-  mutate(state = fct_reorder(status, n, .desc = T)) %>% 
-  ggplot(aes(status, n)) +
+  mutate(status = fct_reorder(status, n, .desc = T)) %>% 
+  ggplot(aes(cntry_army, n)) +
   geom_col(aes(fill = cntry_army), position = position_dodge2(width = 0.9)) +
   geom_label(aes(label = n),  position = position_dodge2(width = 0.9)) +
   # coord_flip() +
@@ -95,7 +98,8 @@ oryx_data %>%
         legend.key.width = unit(0.55, 'cm'), #change legend key width
         legend.title = element_text(size=15), #change legend title font size
         legend.text = element_text(size=13),
-        legend.position = c(0.15, 0.87), 
+        legend.position = "none", 
+        strip.background = element_rect(fill = "lightgrey", color = NA),
         axis.text.x = element_text(face = "bold"),
         plot.title = element_text(size = 30),
         plot.caption = element_text(size = 14),
@@ -105,7 +109,8 @@ oryx_data %>%
   scale_fill_manual(name = "Country that lost equipment", values = c("darkred", "darkblue")) +
   ggtitle("Losses in Ukraine-Russia conflict") +
   labs(x = "", y = "Lost Tanks", title = "Tank Losses in Russia-Ukraine War 2022 by Status", subtitle = str_wrap("The data only records tank losses with photographic or videographic evidence. The quantity of actually lost tanks is therefore likely higher and the data presented here can be seen as a 'lower bound' estimate for losses. Many of the entries listed as 'abandoned' will likely end up captured or destroyed and will only be reflected here if confirmed. Note: since this relies on publicly shared data there may also be a bias where losses for Ukraine and Russia are underreported or overreported, respectively.", width = 158), caption = glue::glue("Source: Oryxspioenkop. Data available here: https://github.com/favstats/uaconflict_equipmentloss.\nLast updated: {today()}.  Data scraping and visualization: Fabio Votta (@favstats)."))  +
-  scale_color_manual(values = c("darkred", "darkblue")) 
+  scale_color_manual(values = c("darkred", "darkblue")) +
+  facet_wrap(~status, scales = "free_x", nrow = 1)
 
 ggsave("img/tank_losses.png", width=12, height=8, dpi = 600, bg = "white")
 

@@ -109,6 +109,7 @@ oryx_data <- russia_data %>%
 saveRDS(oryx_data, file = "data/oryx_data.rds")
 write_csv(oryx_data, file = glue::glue("data/daily/{Sys.Date()}_oryx_data.csv"))
 
+source("dataviz.R")
 
 # oryx_data %>% 
 #   # filter(type != "") %>%
