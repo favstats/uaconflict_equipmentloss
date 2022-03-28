@@ -50,6 +50,18 @@ This dataset will only be updated every now and then as it requires some manual 
 
 ![](img/tank_losses.png)
 
+### Armor losses by status
+
+![](img/armor_losses.png)
+
+### Artillery losses by status
+
+![](img/artillery_losses.png)
+
+### Aircraft losses by status
+
+![](img/aircraft_losses.png)
+
 ### Overall losses over time
 
 ![](img/overall_losses_time.png)

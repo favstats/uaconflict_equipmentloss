@@ -92,6 +92,18 @@ manual checking. Maybe I try to automate it further in the future :)
 
 ![](img/tank_losses.png)
 
+### Armor losses by status
+
+![](img/armor_losses.png)
+
+### Artillery losses by status
+
+![](img/artillery_losses.png)
+
+### Aircraft losses by status
+
+![](img/aircraft_losses.png)
+
 ### Overall losses over time
 
 ![](img/overall_losses_time.png)

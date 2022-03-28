@@ -119,6 +119,127 @@ oryx_data %>%
 
 ggsave("img/tank_losses.png", width=12, height=8, dpi = 600, bg = "white")
 
+
+oryx_data %>% #count(equipment_type, sort = T) %>% #View
+  # filter(type != "") %>%
+  filter(str_detect(equipment_type, "Tanks|Armour|Infantry Fighting Vehicles")) %>% #count(equipment_type, sort = T) 
+  count(cntry_army, status) %>% 
+  mutate(status = ifelse(status == "captured", "lost by capture", status)) %>% 
+  arrange(desc(n)) %>% 
+  # filter(n > 10) %>% 
+  # slice(1:20) %>% 
+  # .[-21,] %>% 
+  # .[12:30,] %>% 
+  mutate(status = fct_reorder(status, n, .desc = T)) %>% 
+  ggplot(aes(cntry_army, n)) +
+  geom_col(aes(fill = cntry_army), position = position_dodge2(width = 0.9)) +
+  geom_label(aes(label = n),  position = position_dodge2(width = 0.9)) +
+  # coord_flip() +
+  hrbrthemes::theme_ipsum() +
+  theme(legend.key.size = unit(0.55, 'cm'), #change legend key size
+        legend.key.height = unit(0.55, 'cm'), #change legend key height
+        legend.key.width = unit(0.55, 'cm'), #change legend key width
+        legend.title = element_text(size=15), #change legend title font size
+        legend.text = element_text(size=13),
+        legend.position = "none", 
+        strip.background = element_rect(fill = "lightgrey", color = NA),
+        axis.text.x = element_text(face = "bold"),
+        plot.title = element_text(size = 30),
+        plot.caption = element_text(size = 14),
+        plot.subtitle = element_text(size = 13), 
+        axis.title.x = element_text(size = 12), 
+        axis.title.y = element_text(size = 12)) +
+  scale_fill_manual(name = "Country that lost equipment", values = c("darkred", "darkblue")) +
+  # ggtitle("Losses in Ukraine-Russia conflict") +
+  labs(x = "", y = "Lost Tanks", title = "Armored Vehicle Losses in Russia-Ukraine War 2022 by Status", 
+       subtitle = str_wrap("Armored vehicles includes: tanks, APCs, IFVs and AFVs. The data only records vehicle losses with photographic or videographic evidence. The quantity of actually lost vehicles is therefore likely higher and the data presented here can be seen as a 'lower bound' estimate for losses. Many of the entries listed as 'abandoned' will likely end up captured or destroyed and will only be reflected here if confirmed. Note: since this relies on publicly shared data there may also be a bias where losses for Ukraine and Russia are underreported or overreported, respectively.", width = 158), caption = glue::glue("Source: Oryxspioenkop. Data available here: https://github.com/favstats/uaconflict_equipmentloss.\nLast updated: {today()}.  Data scraping and visualization: Fabio Votta (@favstats)."))  +
+  scale_color_manual(values = c("darkred", "darkblue")) +
+  facet_wrap(~status, scales = "free_x", nrow = 1)
+
+ggsave("img/armor_losses.png", width=12, height=8, dpi = 600, bg = "white")
+
+oryx_data %>% #count(equipment_type, sort = T) %>% #View
+  # filter(type != "") %>%
+  filter(str_detect(equipment_type, "Artillery")) %>% #count(equipment_type, sort = T) 
+  filter(status != "") %>% 
+count(cntry_army, status) %>% 
+  mutate(status = ifelse(status == "captured", "lost by capture", status)) %>% 
+  arrange(desc(n)) %>% 
+  # filter(n > 10) %>% 
+  # slice(1:20) %>% 
+  # .[-21,] %>% 
+  # .[12:30,] %>% 
+  mutate(status = fct_reorder(status, n, .desc = T)) %>% 
+  ggplot(aes(cntry_army, n)) +
+  geom_col(aes(fill = cntry_army), position = position_dodge2(width = 0.9)) +
+  geom_label(aes(label = n),  position = position_dodge2(width = 0.9)) +
+  # coord_flip() +
+  hrbrthemes::theme_ipsum() +
+  theme(legend.key.size = unit(0.55, 'cm'), #change legend key size
+        legend.key.height = unit(0.55, 'cm'), #change legend key height
+        legend.key.width = unit(0.55, 'cm'), #change legend key width
+        legend.title = element_text(size=15), #change legend title font size
+        legend.text = element_text(size=13),
+        legend.position = "none", 
+        strip.background = element_rect(fill = "lightgrey", color = NA),
+        axis.text.x = element_text(face = "bold"),
+        plot.title = element_text(size = 30),
+        plot.caption = element_text(size = 14),
+        plot.subtitle = element_text(size = 13), 
+        axis.title.x = element_text(size = 12), 
+        axis.title.y = element_text(size = 12)) +
+  scale_fill_manual(name = "Country that lost equipment", values = c("darkred", "darkblue")) +
+  # ggtitle("Losses in Ukraine-Russia conflict") +
+  labs(x = "", y = "Lost Equipment", title = "Artillery Losses in Russia-Ukraine War 2022 by Status", 
+       subtitle = str_wrap("Artillery includes mortars, self-propelled and towed artillery. The data only records losses with photographic or videographic evidence. The quantity of actually lost equipment is therefore likely higher and the data presented here can be seen as a 'lower bound' estimate for losses. Many of the entries listed as 'abandoned' will likely end up captured or destroyed and will only be reflected here if confirmed. Note: since this relies on publicly shared data there may also be a bias where losses for Ukraine and Russia are underreported or overreported, respectively.", width = 158), caption = glue::glue("Source: Oryxspioenkop. Data available here: https://github.com/favstats/uaconflict_equipmentloss.\nLast updated: {today()}.  Data scraping and visualization: Fabio Votta (@favstats)."))  +
+  scale_color_manual(values = c("darkred", "darkblue")) +
+  facet_wrap(~status, scales = "free_x", nrow = 1)
+
+ggsave("img/artillery_losses.png", width=12, height=8, dpi = 600, bg = "white")
+
+
+oryx_data %>% #count(equipment_type, sort = T) %>% View
+  # filter(type != "") %>%
+  filter(str_detect(equipment_type, "Aircraft|Helicopter")) %>%
+  filter(str_detect(equipment_type, "Anti", negate = T)) %>% 
+  # count(equipment_type, sort = T) 
+  filter(status != "") %>% 
+  count(cntry_army, status) %>% 
+  mutate(status = ifelse(status == "captured", "lost by capture", status)) %>% 
+  arrange(desc(n)) %>% 
+  # filter(n > 10) %>% 
+  # slice(1:20) %>% 
+  # .[-21,] %>% 
+  # .[12:30,] %>% 
+  mutate(status = fct_reorder(status, n, .desc = T)) %>% 
+  ggplot(aes(cntry_army, n)) +
+  geom_col(aes(fill = cntry_army), position = position_dodge2(width = 0.9)) +
+  geom_label(aes(label = n),  position = position_dodge2(width = 0.9)) +
+  # coord_flip() +
+  hrbrthemes::theme_ipsum() +
+  theme(legend.key.size = unit(0.55, 'cm'), #change legend key size
+        legend.key.height = unit(0.55, 'cm'), #change legend key height
+        legend.key.width = unit(0.55, 'cm'), #change legend key width
+        legend.title = element_text(size=15), #change legend title font size
+        legend.text = element_text(size=13),
+        legend.position = "none", 
+        strip.background = element_rect(fill = "lightgrey", color = NA),
+        axis.text.x = element_text(face = "bold"),
+        plot.title = element_text(size = 30),
+        plot.caption = element_text(size = 14),
+        plot.subtitle = element_text(size = 13), 
+        axis.title.x = element_text(size = 12), 
+        axis.title.y = element_text(size = 12)) +
+  scale_fill_manual(name = "Country that lost equipment", values = c("darkred", "darkblue")) +
+  # ggtitle("Losses in Ukraine-Russia conflict") +
+  labs(x = "", y = "Lost Equipment", title = "Aircraft Losses in Russia-Ukraine War 2022 by Status", 
+       subtitle = str_wrap("Aircraft includes fighter jets and helicopter. The data only records losses with photographic or videographic evidence. The quantity of actually lost equipment is therefore likely higher and the data presented here can be seen as a 'lower bound' estimate for losses. Many of the entries listed as 'abandoned' will likely end up captured or destroyed and will only be reflected here if confirmed. Note: since this relies on publicly shared data there may also be a bias where losses for Ukraine and Russia are underreported or overreported, respectively.", width = 158), caption = glue::glue("Source: Oryxspioenkop. Data available here: https://github.com/favstats/uaconflict_equipmentloss.\nLast updated: {today()}.  Data scraping and visualization: Fabio Votta (@favstats)."))  +
+  scale_color_manual(values = c("darkred", "darkblue")) +
+  facet_wrap(~status, scales = "free_x", nrow = 1)
+
+ggsave("img/aircraft_losses.png", width=12, height=8, dpi = 600, bg = "white")
+
+
 if(ocr_data_new){
   
   Sys.setlocale("LC_TIME", "en_GB.UTF-8")
@@ -249,4 +370,7 @@ if(ocr_data_new){
   
   
 }
+
+
+
 
