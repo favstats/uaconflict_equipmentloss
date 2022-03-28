@@ -3,6 +3,9 @@ pacman::p_load(tidyverse, geomtextpath, lubridate)
 
 ocr_data_new <- F
 
+oryx_data <- readRDS("data/oryx_data.rds")
+oryx_data_dates <- read_csv("data/oryx_data_dates.csv")
+
 oryx_data %>% 
   # filter(type != "") %>%
   count(cntry_army, equipment_type) %>% 
@@ -79,7 +82,7 @@ ggsave("img/overall_losses_long.png", width=12, height=15, dpi = 600, bg = "whit
 
 oryx_data %>% 
   # filter(type != "") %>%
-  filter(str_detect(equipment_type, "Tank")) %>%
+  filter(str_detect(equipment_type, "Tanks")) %>% 
   count(cntry_army, status) %>% 
   mutate(status = ifelse(status == "captured", "lost by capture", status)) %>% 
   arrange(desc(n)) %>% 
@@ -187,7 +190,7 @@ if(ocr_data_new){
   
   
   oryx_data_dates %>% 
-    # filter(str_detect(equipment_type, "Tanks|Fighting|Personnel")) %>%
+    filter(str_detect(equipment_type, "Tanks")) %>% 
     mutate(date = lubridate::floor_date(date, "week", week_start = getOption("lubridate.week.start", 4))) %>% 
     filter(date != max(date, na.rm = T)) %>% 
     drop_na(cntry_army) %>% 
