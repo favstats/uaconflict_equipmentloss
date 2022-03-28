@@ -1,5 +1,7 @@
 
-pacman::p_load(tidyverse, geomtextpath, lubridate)
+install.packages("pacman")
+
+pacman::p_load(tidyverse, geomtextpath, lubridate, hrbrthemes)
 
 ocr_data_new <- F
 
