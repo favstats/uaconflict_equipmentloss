@@ -151,7 +151,7 @@ oryx_data %>% #count(equipment_type, sort = T) %>% #View
         axis.title.y = element_text(size = 12)) +
   scale_fill_manual(name = "Country that lost equipment", values = c("darkred", "darkblue")) +
   # ggtitle("Losses in Ukraine-Russia conflict") +
-  labs(x = "", y = "Lost Tanks", title = "Armored Vehicle Losses in Russia-Ukraine War 2022 by Status", 
+  labs(x = "", y = "Lost Armored Vehicles", title = "Armored Vehicle Losses in Russia-Ukraine War 2022 by Status", 
        subtitle = str_wrap("Armored vehicles includes: tanks, APCs, IFVs and AFVs. The data only records vehicle losses with photographic or videographic evidence. The quantity of actually lost vehicles is therefore likely higher and the data presented here can be seen as a 'lower bound' estimate for losses. Many of the entries listed as 'abandoned' will likely end up captured or destroyed and will only be reflected here if confirmed. Note: since this relies on publicly shared data there may also be a bias where losses for Ukraine and Russia are underreported or overreported, respectively.", width = 158), caption = glue::glue("Source: Oryxspioenkop. Data available here: https://github.com/favstats/uaconflict_equipmentloss.\nLast updated: {today()}.  Data scraping and visualization: Fabio Votta (@favstats)."))  +
   scale_color_manual(values = c("darkred", "darkblue")) +
   facet_wrap(~status, scales = "free_x", nrow = 1)
