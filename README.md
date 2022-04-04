@@ -84,7 +84,11 @@ manual checking. Maybe I try to automate it further in the future :)
 
 ## Visualizations
 
-### Overall losses by type
+### Overall losses by type I
+
+![](img/flag_plot.png)
+
+### Overall losses by type II
 
 ![](img/overall_losses.png)
 

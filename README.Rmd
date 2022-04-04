@@ -42,7 +42,11 @@ This dataset will only be updated every now and then as it requires some manual 
 
 ## Visualizations
 
-### Overall losses by type
+### Overall losses by type I 
+
+![](img/flag_plot.png)
+
+### Overall losses by type II
 
 ![](img/overall_losses.png)
 

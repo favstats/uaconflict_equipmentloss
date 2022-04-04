@@ -111,6 +111,9 @@ write_csv(oryx_data, file = glue::glue("data/daily/{Sys.Date()}_oryx_data.csv"))
 
 source("dataviz.R")
 
+oryx_data %>% 
+  count(equipment_type, cntry_army, status, sort = T) %>% View
+
 
 # oryx_data %>% 
 #   filter(equipment_type == "Tanks") %>% 

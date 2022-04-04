@@ -240,6 +240,59 @@ oryx_data %>% #count(equipment_type, sort = T) %>% View
 ggsave("img/aircraft_losses.png", width=12, height=8, dpi = 600, bg = "white")
 
 
+
+oryx_data %>% 
+  mutate(type = case_when(
+    str_detect(equipment_type, "Artillery|Mortar|Multiple Rocket Launchers") ~ "Artillery",
+    str_detect(equipment_type, "Anti-Aircraft|Surface-To-Air") ~ "Anti-Aircraft Systems",
+    str_detect(equipment_type, "Aircraft|Helicopter|Unmanned Aerial Vehicles") ~ "Aircraft",
+    str_detect(equipment_type, "Radar|Jammer|Communication") ~ "Radio & Communications",
+    str_detect(equipment_type, "Engineering") ~ "Engineering Vehicles",
+    T ~ equipment_type
+  )) %>% 
+  # count(equipment_type)
+  # filter(str_detect(equipment_type, "Tanks|Armour|Infantry Fighting Vehicles")) %>% #count(equipment_type, sort = T) 
+  count(type, cntry_army) %>%
+  group_by(type) %>% 
+  mutate(total = sum(n),
+         perc = n/total*100) %>% 
+  ungroup() %>% 
+  # filter(perc < 80 & perc > 20) %>%
+  filter(perc != 100) %>%
+  filter(!str_detect(type, "Ship") ) %>%
+  mutate(n = ifelse(cntry_army == "Ukraine", n*-1, n)) %>% 
+  mutate(perc_order = abs(n)) %>% 
+  mutate(perc = ifelse(cntry_army == "Ukraine", perc*-1, perc)) %>% 
+  mutate(type = fct_reorder(type, perc_order, .fun = sum, .desc = T)) %>% 
+  ggplot(aes(type, n)) +
+  geom_col(aes(fill = cntry_army), position = position_stack(), alpha = 0.9) +
+  scale_fill_manual(name = "Army that lost\nequipment",values = c("#005bbb", "#ffd500")) +
+  scale_color_manual(name = "Army that\nlost equipment",values = c("#005bbb", "#ffd500")) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_label(aes(label = abs(n)), fill = "white", show.legend = F, 
+             size = 3.5,
+             label.size = 0.15, fontface = "bold")  +
+  scale_y_continuous(labels = abs, minor_breaks = NULL) +
+  hrbrthemes::theme_ipsum() +
+  # geom_label(aes(label = type), angle = 90) +
+  # ggthemes::theme_hc() +
+  labs(x = "", y = "<<< Ukrainian Losses                                       Russian Losses >>> ", title = "Equipment Losses in Russia-Ukraine War 2022", 
+       subtitle = str_wrap("The data shown here only records losses with photographic or videographic evidence. The quantity of actually lost equipment is therefore likely higher and the data presented here can be seen as a 'lower bound' estimate for losses. Note: since this relies on publicly shared media there may also be a bias where losses for Ukraine and Russia are underreported or overreported, respectively.", width = 138), caption = c("Source: Oryxspioenkop.\nData available here: https://github.com/favstats/uaconflict_equipmentloss.", glue::glue("Last updated: {today()}.\nData scraping and visualization: Fabio Votta (@favstats).")))  +
+  scale_x_discrete(labels = c("Tanks", "Infantry\nFighting\nVehicles\n(IFVs)", "Armoured\nFighting\nVehicles\n(AFVs)", "Artillery", "Infantry\nMobility\nVehicles\n(IMVs)", "Armoured\nPersonnel\nCarriers\n(APCs)", "Aircraft", "Anti-Aircraft\nSystems", "Engineering\nVehicles", "Radio &\nComms")) +
+  theme(axis.text.x = element_text(size = 9.2, face = "bold"), 
+        plot.title = element_text(size = 28), 
+        panel.grid.major.x = element_blank() ,
+        plot.caption = element_text(hjust = c(0, 1)),
+        plot.subtitle = element_text(size = 11), 
+        legend.position = c(0.8, 0.83)) + 
+  guides(fill = guide_legend(title.position = "left", 
+                             # hjust = 0.5 centres the title horizontally
+                             title.hjust = 0,
+                             label.position = "right"))
+# coord_flip() 
+ggsave("img/flag_plot.png", width=9, height=6, dpi = 600, bg = "white")
+
+
 if(ocr_data_new){
   
   Sys.setlocale("LC_TIME", "en_GB.UTF-8")
