@@ -9,7 +9,7 @@ on:
       - master
       - main
   schedule:
-    - cron: '0 23 * * *'
+    - cron: '0 9,21 * * *'
       
 jobs:
   update-data:
