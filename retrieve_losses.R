@@ -101,22 +101,17 @@ oryx_data <- russia_data %>%
     str_detect(state, "destroyed|sunk|scuttled|stripped") ~ "destroyed",
     str_detect(state, "abandoned|aboned") ~ "abandoned",
     str_detect(state, "damaged") ~ "damaged",
+    str_detect(state, "captured") ~ "captured",
     T ~ state
   ))  %>%
   select(equipment_type = type, cntry_army = owner, flag, system = equipment, status = state, image_link, total_equipment_type_oryx:total_damaged_oryx) %>% 
-  mutate(timestamp = tstamp)
+  mutate(timestamp = tstamp) 
 
 saveRDS(oryx_data, file = "data/oryx_data.rds")
 write_csv(oryx_data, file = glue::glue("data/daily/{Sys.Date()}_oryx_data.csv"))
 
 source("dataviz.R")
 
-# oryx_data %>% 
-<<<<<<< HEAD
-#   count(equipment_type, cntry_army, status, sort = T) %>% View
-=======
-#  count(equipment_type, cntry_army, status, sort = T) %>% View
->>>>>>> 91861c63a2d907cdf43452fbff76794421ba9bf6
 
 
 # oryx_data %>% 
