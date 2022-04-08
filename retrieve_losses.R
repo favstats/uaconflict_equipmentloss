@@ -112,7 +112,11 @@ write_csv(oryx_data, file = glue::glue("data/daily/{Sys.Date()}_oryx_data.csv"))
 source("dataviz.R")
 
 # oryx_data %>% 
+<<<<<<< HEAD
 #   count(equipment_type, cntry_army, status, sort = T) %>% View
+=======
+#  count(equipment_type, cntry_army, status, sort = T) %>% View
+>>>>>>> 91861c63a2d907cdf43452fbff76794421ba9bf6
 
 
 # oryx_data %>% 

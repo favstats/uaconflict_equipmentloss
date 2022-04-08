@@ -11,11 +11,15 @@ on:
   schedule:
     - cron: '0 9,21 * * *'
       
+      
+      
+
 jobs:
   update-data:
     name: Update Data
     runs-on: "macos-latest"
     steps:
+      - run: brew install --cask xquartz
       - uses: r-lib/actions/setup-r@v1
         with:
           r-version: 'release'
