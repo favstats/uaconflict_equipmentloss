@@ -436,6 +436,19 @@ oryx_data %>%
   mutate(n = ifelse(cntry_army == "Ukraine", n*-1, n)) %>% 
   mutate(perc_order = abs(n)) %>% 
   mutate(perc = ifelse(cntry_army == "Ukraine", perc*-1, perc)) %>% 
+  mutate(type = case_when(
+    str_detect(type, "Tanks") ~ "Tanks",
+    str_detect(type, "Infantry Fighting") ~ "Infantry\nFighting\nVehicles\n(IFVs)",
+    str_detect(type, "Armoured Fighting") ~ "Armoured\nFighting\nVehicles\n(AFVs)",
+    str_detect(type, "Artillery") ~ "Artillery",
+    str_detect(type, "Infantry Mobility") ~ "Infantry\nMobility\nVehicles\n(IMVs)",
+    str_detect(type, "Armoured Personnel") ~ "Armoured\nPersonnel\nCarriers\n(APCs)",
+    str_detect(type, "Anti-Aircraft") ~ "Anti-Aircraft\nSystems",
+    str_detect(type, "Aircraft") ~ "Aircraft",
+    str_detect(type, "Engineering") ~ "Engineering\nVehicles",
+    str_detect(type, "Radio") ~ "Radio &\nComms",
+    T ~type,
+  )) %>% 
   mutate(type = fct_reorder(type, perc_order, .fun = sum, .desc = T)) %>% 
   ggplot(aes(type, n)) +
   geom_col(aes(fill = cntry_army), position = position_stack(), alpha = 0.9) +
@@ -451,7 +464,12 @@ oryx_data %>%
   # ggthemes::theme_hc() +
   labs(x = "", y = "<<< Ukrainian Losses                                       Russian Losses >>> ", title = "Equipment Losses in Russia-Ukraine War 2022", 
        subtitle = str_wrap("The data shown here only records losses with photographic or videographic evidence. The quantity of actually lost equipment is therefore likely higher and the data presented here can be seen as a 'lower bound' estimate for losses. Note: since this relies on publicly shared media there may also be a bias where losses for Ukraine and Russia are underreported or overreported, respectively.", width = 138), caption = c("Source: Oryxspioenkop.\nData available here: https://github.com/favstats/uaconflict_equipmentloss.", glue::glue("Last updated: {today()}.\nData scraping and visualization: Fabio Votta (@favstats).")))  +
-  scale_x_discrete(labels = c("Tanks", "Infantry\nFighting\nVehicles\n(IFVs)", "Armoured\nFighting\nVehicles\n(AFVs)", "Artillery", "Infantry\nMobility\nVehicles\n(IMVs)", "Armoured\nPersonnel\nCarriers\n(APCs)", "Aircraft", "Anti-Aircraft\nSystems", "Engineering\nVehicles", "Radio &\nComms")) +
+  # scale_x_discrete(labels = c("Tanks", "Infantry\nFighting\nVehicles\n(IFVs)", 
+  #                             "Armoured\nFighting\nVehicles\n(AFVs)", "Artillery", 
+  #                             "Infantry\nMobility\nVehicles\n(IMVs)", 
+  #                             "Armoured\nPersonnel\nCarriers\n(APCs)", "Aircraft", 
+  #                             "Anti-Aircraft\nSystems", "Engineering\nVehicles", 
+  #                             "Radio &\nComms")) +
   theme(axis.text.x = element_text(size = 9.2, face = "bold"), 
         plot.title = element_text(size = 28), 
         panel.grid.major.x = element_blank() ,
