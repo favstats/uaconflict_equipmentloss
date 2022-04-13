@@ -267,6 +267,7 @@ if(ocr_data_new){
     ))
   
 
+  # daily_dat %>% count(date) %>% View
 
   oryx_data_dates_com <- oryx_data_dates %>% 
     # filter(max(date, na.rm = T) == date)
@@ -295,10 +296,14 @@ if(ocr_data_new){
     mutate(nudgey = 0.06*mean_n) %>% 
     pull(nudgey)
   
+  oryx_data_dates_com %>% 
+    # filter(str_detect(equipment_type, "Tanks|Fighting|Personnel")) %>%
+    mutate(date = lubridate::floor_date(date, "week", week_start = getOption("lubridate.week.start", 4))) %>% count(date)
+  
   overall_losses_time <- oryx_data_dates_com %>% 
     # filter(str_detect(equipment_type, "Tanks|Fighting|Personnel")) %>%
     mutate(date = lubridate::floor_date(date, "week", week_start = getOption("lubridate.week.start", 4))) %>% 
-    filter(date != max(date, na.rm = T)) %>%
+    # filter(date != max(date, na.rm = T)) %>%
     drop_na(cntry_army) %>% 
     count(cntry_army, date) %>% 
     ggplot(aes(date, n, color = cntry_army)) +

@@ -65,7 +65,9 @@ read_csv("data/daily/2022-03-26_oryx_data.csv")
 #> #   total_captured_oryx <dbl>, total_damaged_oryx <dbl>, timestamp <dttm>
 ```
 
-## OCR for timestamping images associated with losses
+## Timestamping Equipment Losses
+
+### OCR
 
 Each entry on the equipment loss list has an image or source associated
 to confirm the loss. In almost all cases the image includes a date which
@@ -81,6 +83,15 @@ image link. If you prefer the merged dataset then you can use
 
 This dataset will only be updated every now and then as it requires some
 manual checking. Maybe I try to automate it further in the future :)
+
+### Weekly Updates
+
+The data after 26th of March is not updated via OCR. Instead, I employ
+the dates by which the data was added to the Oryx blog. Since this is
+likely to be somewhat inaccurate, I only ever aggregate the data by week
+(not showing daily counts as that might be misleading). The graphs
+always *exclude* the latest week, as that one is not finished yet and
+might give a biased impression.
 
 ## Visualizations
 
