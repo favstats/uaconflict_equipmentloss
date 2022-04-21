@@ -8,28 +8,40 @@ source("R/helpers.R")
 
 raw_html <- read_html("https://www.oryxspioenkop.com/2022/02/attack-on-europe-documenting-equipment.html")
 
-full_list <- raw_html %>% 
+russia_list <- raw_html %>% 
   html_elements("article") %>% 
   html_children() %>% 
   html_children() %>%
   .[str_detect(as.character(.), "Russia -|Ukraine -")] %>% 
   html_children()
 
+raw_html_ukraine <- read_html("https://www.oryxspioenkop.com/2022/02/attack-on-europe-documenting-ukrainian.html")
+
+ukraine_list <- raw_html_ukraine %>% 
+  html_elements("article") %>% 
+  html_children() %>% 
+  html_children() %>%
+  .[str_detect(as.character(.), "Ukraine -")] %>% 
+  html_children() %>% 
+  html_children()
 
 
-russia_start <- which(str_detect(as.character(full_list), "Russia -"))
-
-ukraine_start <- which(str_detect(as.character(full_list), "Ukraine -"))
-
-russia_list <- full_list[(russia_start+1):(ukraine_start-1)]
-
-ukraine_end <- which(str_detect(as.character(full_list), "Special thanks"))
-
-ukraine_list <- full_list[(ukraine_start+1):ukraine_end]
+# russia_start <- which(str_detect(as.character(full_list), "Russia -"))
+# 
+# ukraine_start <- which(str_detect(as.character(full_list), "Ukraine -"))
+# 
+# russia_list <- full_list[(russia_start+1):length(full_list)]
+# 
+# ukraine_end <- which(str_detect(as.character(full_list), "Special thanks"))
+# 
+# ukraine_list <- full_list[(ukraine_start+1):ukraine_end]
 
 
 
 nested_lists <- which(str_count(as.character(ukraine_list), "<h3>") > 2)
+
+# nested_lists <- ukraine_list %>% str_which("Trucks, ")
+
 
 list1 <- ukraine_list[-nested_lists]
 
@@ -46,8 +58,35 @@ for (node in seq_along(list2)) {
 ukraine_list <- list1
 
 
+nested_lists <- ukraine_list %>% str_which("Trucks, ")
+
+
+list1 <- ukraine_list[-nested_lists:-length(ukraine_list)]
+
+list2 <- ukraine_list[nested_lists:length(ukraine_list)] %>%
+  html_children()
+
+for (node in seq_along(list2)) {
+  end_of_list <- length(list1)
+
+  list1[end_of_list+1] <- list2[node]
+}
+
+
+ukraine_list <- list1
+
+# ukraine_list %>% str_which("Trucks, ")
+# 
+# 
+# ukraine_list[72:length(ukraine_list)] %>%
+#   html_children() %>% as.character()
+
+
+# ukraine_list[74:length(ukraine_list)] %>% 
+#   html_text()
+
 russia_titles <- which(str_detect(as.character(russia_list), "<h3>") & str_detect(as.character(russia_list), "<h3>\n</h3>", negate = T))
-ukraine_titles <- which(str_detect(as.character(ukraine_list), "<h3>") & str_detect(as.character(ukraine_list), "<h3>\n</h3>", negate = T))
+ukraine_titles <- c(which(str_detect(as.character(ukraine_list), "<h3>") & str_detect(as.character(ukraine_list), "<h3>\n</h3>", negate = T) | str_detect(as.character(ukraine_list), "Trucks, Vehicles and Jeeps")), length(ukraine_list))
 
 russia_intervals <- splitInts(russia_titles) 
 
@@ -75,15 +114,25 @@ ukraine_intervals <- ukraine_intervals[-length(ukraine_intervals)]
 # 
 # retrieve_lists <- possibly(retrieve_lists, otherwise = NULL, quiet = F)
 
+
+
+russia_data <- russia_intervals %>%
+  map_dfr(~{retrieve_lists2(russia_list, .x)}) %>%
+  mutate(owner = "Russia")
+
 ukraine_data <- ukraine_intervals %>% 
-  # .[14:15] %>% 
+  # .[1] %>%
   map_dfr(~{retrieve_lists2(ukraine_list, .x)}) %>% 
   mutate(owner = "Ukraine")
 
+# raw_html_ukraine %>% 
+#   html_elements("#post-body-510263267229750131 > div > div:nth-child(5) > div:nth-child(47) > ul:nth-child(18)") %>% 
+#   html_children() -> yo
+# 
+# debugonce(retrieve_lists2)
+# 
+# retrieve_lists2(yo, 1: length(yo)) %>% View
 
-russia_data <- russia_intervals %>% 
-  map_dfr(~{retrieve_lists2(russia_list, .x)}) %>% 
-  mutate(owner = "Russia")
 
 
 oryx_data <- russia_data %>% 
@@ -106,6 +155,10 @@ oryx_data <- russia_data %>%
   ))  %>%
   select(equipment_type = type, cntry_army = owner, flag, system = equipment, status = state, image_link, total_equipment_type_oryx:total_damaged_oryx) %>% 
   mutate(timestamp = tstamp) 
+
+oryx_data %>% count(equipment_type)
+# 
+# oryx_data %>% filter(equipment_type == "Trucks, Vehicles and Jeeps")
 
 saveRDS(oryx_data, file = "data/oryx_data.rds")
 write_csv(oryx_data, file = glue::glue("data/daily/{Sys.Date()}_oryx_data.csv"))

@@ -273,6 +273,8 @@ if(ocr_data_new){
     # filter(max(date, na.rm = T) == date)
     bind_rows(daily_dat)
   
+  saveRDS(oryx_data_dates_com, file = "data/oryx_data_dates_com.rds")
+  
   date_vec <- seq.Date(as.Date("2022-02-24"), today(), by = "week")
   
   
@@ -303,7 +305,7 @@ if(ocr_data_new){
   overall_losses_time <- oryx_data_dates_com %>% 
     # filter(str_detect(equipment_type, "Tanks|Fighting|Personnel")) %>%
     mutate(date = lubridate::floor_date(date, "week", week_start = getOption("lubridate.week.start", 4))) %>% 
-    # filter(date != max(date, na.rm = T)) %>%
+    filter(date != max(date, na.rm = T)) %>%
     drop_na(cntry_army) %>% 
     count(cntry_army, date) %>% 
     ggplot(aes(date, n, color = cntry_army)) +
