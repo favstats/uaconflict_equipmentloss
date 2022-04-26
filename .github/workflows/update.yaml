@@ -27,7 +27,8 @@ jobs:
         uses: actions/checkout@v2
       - name: "Setup - Install Packages"
         run: |
-          install.packages('tidyverse')
+          install.packages('dplyr')
+          install.packages('tidyr')
           install.packages('rvest')
         shell: Rscript {0}
       - name: "Retrieve Update"
