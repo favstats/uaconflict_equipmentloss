@@ -2,6 +2,7 @@ library(dplyr)
 library(tidyr)
 library(purrr)
 library(rvest)
+library(stringr)
 library(xml2)
 
 tstamp <- Sys.time()
