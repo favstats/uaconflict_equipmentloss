@@ -30,6 +30,7 @@ jobs:
           install.packages('dplyr')
           install.packages('tidyr')
           install.packages('purrr')
+          install.packages('stringr')
           install.packages('rvest')
         shell: Rscript {0}
       - name: "Retrieve Update"
