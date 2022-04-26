@@ -5,6 +5,10 @@ library(rvest)
 library(stringr)
 library(xml2)
 
+require("pacman")
+
+pacman::p_load(tidyverse, geomtextpath, lubridate, hrbrthemes, ggrepel)
+
 tstamp <- Sys.time()
 
 source("R/helpers.R")
