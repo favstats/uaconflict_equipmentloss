@@ -1,4 +1,6 @@
-library(tidyverse)
+library(dplyr)
+library(tidyr)
+library(purrr)
 library(rvest)
 library(xml2)
 
@@ -156,7 +158,7 @@ oryx_data <- russia_data %>%
   select(equipment_type = type, cntry_army = owner, flag, system = equipment, status = state, image_link, total_equipment_type_oryx:total_damaged_oryx) %>% 
   mutate(timestamp = tstamp) 
 
-oryx_data %>% count(equipment_type)
+# ryx_data %>% count(equipment_type)
 # 
 # oryx_data %>% filter(equipment_type == "Trucks, Vehicles and Jeeps")
 
