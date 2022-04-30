@@ -256,21 +256,28 @@ if(ocr_data_new){
     # filter(date >= ymd("2022-03-26")) %>% #View()
     # filter(date == ymd("2022-03-28")) %>% 
     distinct(image_link, equipment_type, cntry_army, status, .keep_all = T) %>% 
-    filter(date >= ymd("2022-03-26")) %>% 
+    # filter(date >= ymd("2022-04-29")) %>% 
     mutate(status = case_when(
       str_detect(status, "destroyed|sunk|scuttled|stripped") ~ "destroyed",
       str_detect(status, "abandoned|aboned") ~ "abandoned",
       str_detect(status, "damaged") ~ "damaged",
       str_detect(status, "captured") ~ "captured",
       T ~ status
-    ))
+    )) %>% 
+    filter(!(image_link %in% oryx_data_dates$image_link))
   
-
+  # unique(daily_dat$image_link)
+  
+  
   # daily_dat %>% count(date) %>% View
 
   oryx_data_dates_com <- oryx_data_dates %>% 
     # filter(max(date, na.rm = T) == date)
-    bind_rows(daily_dat)
+    bind_rows(daily_dat) %>% 
+    mutate(date = if_else(is.na(date), lubridate::as_date(timestamp), lubridate::as_date(date)))
+  
+  # oryx_data_dates_com %>% #View
+  #   filter(is.na(date)) %>% View
   
   saveRDS(oryx_data_dates_com, file = "data/oryx_data_dates_com.rds")
   
@@ -357,7 +364,7 @@ if(ocr_data_new){
     scale_color_manual(values = c("darkred", "darkblue")) 
   
   
-  ggsave(plot = vehicle_losses_time, "img/vehicle_losses_time.png", width=12, height=9, dpi = 600, bg = "white")
+  ggsave(plot = vehicle_losses_time, "img/vehicle_losses_time.png", width=14, height=9, dpi = 600, bg = "white")
   
   
   tank_losses_time <- oryx_data_dates_com %>% 
@@ -371,7 +378,7 @@ if(ocr_data_new){
     geom_textline(size = 4.4, aes(label = cntry_army), hjust = 0.07) +
     ggrepel::geom_text_repel(aes(label = n), seed = 2410191, size = 2.8, nudge_y = 1.75) +
     geom_point(size = 0.8) +
-    facet_wrap(~status) +
+    facet_wrap(~status, ncol = 2) +
     # theme_minimal() + 
     hrbrthemes::theme_ipsum() +
     theme(legend.position = "none", 

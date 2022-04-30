@@ -22,8 +22,10 @@ pacman::p_load(tidyverse, googleCloudVisionR, lubridate, googlesheets4)
 
 oryx_data <- readRDS("data/oryx_data.rds")
 
-Sys.setenv("GCV_AUTH_FILE" = "google_auth.json")
+Sys.setenv("GCV_AUTH_FILE" = "un.json")
 
+# oryx_data_dates <- read_csv("data/oryx_data_dates.csv")
+library(googleCloudVisionR)
 
 ocr_dat_old <- readRDS("data/ocr_dat.rds")
 
@@ -32,7 +34,7 @@ ocr_dat <- oryx_data %>%
   filter(str_detect(image_link, "\\.jpg|\\.png|\\.jpeg")) %>%
   filter(!(image_link %in% ocr_dat_old$image_path)) %>% 
   pull(image_link) %>% 
-  # .[1:10] %>% 
+  # .[1:10] %>%
   map_dfr(~{
     print(.x)
     googleCloudVisionR::gcv_get_image_annotations(.x, feature = "TEXT_DETECTION")
@@ -51,6 +53,7 @@ saveRDS(ocr_dat, file = "data/ocr_dat.rds")
 #   distinct(image_link) %>% 
 #   filter(!str_detect(image_link, "postimg"))
 
+# oryx_data %>% count(status, sort = T)
 ```
 
 
@@ -107,7 +110,7 @@ fixed_dates <- read_sheet("https://docs.google.com/spreadsheets/d/1fv6jCHNQhBjBX
   filter(note != "")
 
 dates_dat <- old_dates_dat %>% 
-  bind_rows(fixed_dates) %>% 
+  # bind_rows(fixed_dates) %>% 
   bind_rows(programmatic_fix) %>% 
   select(image_path, date = date2, description, note) %>% 
   distinct(image_path, .keep_all = T) %>% 
