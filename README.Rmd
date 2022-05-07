@@ -37,14 +37,14 @@ read_csv("data/daily/2022-03-26_oryx_data.csv")
 
 Each entry on the equipment loss list has an image or source associated to confirm the loss. In almost all cases the image includes a date which likely represent the date on which the media file was first seen by the Oryx team. In order to make use of this timestamp I employ `Google Cloud Vision API` to extract dates from images of the Oryx dateset.
 
-The cleaned dataset (with some manual coding) can be found here: `data/dates_dat.csv` andd can be merged into the main dataset via the image link. If you prefer the merged dataset then you can use `date/oryx_data_dates.csv`.
+The cleaned dataset (with some manual coding) can be found here: `data/dates_dat.csv` and can be merged into the main dataset via the image link. If you prefer the merged dataset then you can use `date/oryx_data_dates.csv`.
 
 This dataset will only be updated every now and then as it requires some manual checking. Maybe I try to automate it further in the future :)
 
 
 ### Weekly Updates
 
-The data after 26th of March is not updated via OCR. Instead, I employ the dates by which the data was added to the Oryx blog. Since this is likely to be somewhat inaccurate, I only ever aggregate the data by week (not showing daily counts as that might be misleading). The graphs always *exclude* the latest week, as that one is not finished yet and might give a biased impression.
+The data for dates after 26th of March is kindly provided by @[Narretz](https://twitter.com/Narretz) (click [here](https://invasion.pages.dev/)) who runs the Oryx source images through OCR in Azure Vision API. Since there could be errors in reporting, I only ever aggregate the data by week (not showing daily counts as that might be misleading). The graphs always *exclude* the latest week, as that one is not finished yet and might give a biased impression.
 
 ## Visualizations
 

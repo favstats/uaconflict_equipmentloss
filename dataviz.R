@@ -1,6 +1,6 @@
 
 
-pacman::p_load(tidyverse, geomtextpath, lubridate, hrbrthemes, ggrepel)
+pacman::p_load(tidyverse, geomtextpath, lubridate, hrbrthemes, ggrepel, jsonlite)
 
 ocr_data_new <- T
 
@@ -243,7 +243,10 @@ if(ocr_data_new){
   
   Sys.setlocale("LC_TIME", "en_GB.UTF-8")
   
-
+  json_source <- jsonlite::fromJSON("https://invasion.pages.dev/data.json") %>% 
+    tibble::as_tibble() %>% 
+    mutate(date2 = lubridate::ymd(createdAt)) %>% 
+    select(image_link = url, date2)  
   
   # read_csv("https://github.com/favstats/uaconflict_equipmentloss/raw/147c6857f11292455bbabc48029e8830b0a5c987/data/daily/2022-03-28_oryx_data.csv") %>% 
     # write_csv(file = "data/daily/2022-03-28_oryx_data.csv")
@@ -271,10 +274,15 @@ if(ocr_data_new){
   
   # daily_dat %>% count(date) %>% View
 
-  oryx_data_dates_com <- oryx_data_dates %>% 
+  # oryx_data_dates_com %>% 
+  #   filter(is.na(date)) %>% View
+  
+  oryx_data_dates_com <- oryx_data_dates %>%
+    left_join(json_source) %>% 
+    mutate(date = if_else(is.na(date), date2, lubridate::as_date(date)))# %>% 
     # filter(max(date, na.rm = T) == date)
-    bind_rows(daily_dat) %>% 
-    mutate(date = if_else(is.na(date), lubridate::as_date(timestamp), lubridate::as_date(date)))
+    # bind_rows(daily_dat) %>%
+    # mutate(date = if_else(is.na(date), lubridate::as_date(timestamp), lubridate::as_date(date)))
   
   # oryx_data_dates_com %>% #View
   #   filter(is.na(date)) %>% View
@@ -304,9 +312,9 @@ if(ocr_data_new){
     mutate(nudgey = 0.06*mean_n) %>% 
     pull(nudgey)
   
-  oryx_data_dates_com %>% 
+  # oryx_data_dates_com %>% 
     # filter(str_detect(equipment_type, "Tanks|Fighting|Personnel")) %>%
-    mutate(date = lubridate::floor_date(date, "week", week_start = getOption("lubridate.week.start", 4))) %>% count(date)
+    # mutate(date = lubridate::floor_date(date, "week", week_start = getOption("lubridate.week.start", 4))) %>% count(date)
   
   overall_losses_time <- oryx_data_dates_com %>% 
     # filter(str_detect(equipment_type, "Tanks|Fighting|Personnel")) %>%

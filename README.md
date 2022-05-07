@@ -77,7 +77,7 @@ Oryx team. In order to make use of this timestamp I employ
 dateset.
 
 The cleaned dataset (with some manual coding) can be found here:
-`data/dates_dat.csv` andd can be merged into the main dataset via the
+`data/dates_dat.csv` and can be merged into the main dataset via the
 image link. If you prefer the merged dataset then you can use
 `date/oryx_data_dates.csv`.
 
@@ -86,12 +86,14 @@ manual checking. Maybe I try to automate it further in the future :)
 
 ### Weekly Updates
 
-The data after 26th of March is not updated via OCR. Instead, I employ
-the dates by which the data was added to the Oryx blog. Since this is
-likely to be somewhat inaccurate, I only ever aggregate the data by week
-(not showing daily counts as that might be misleading). The graphs
-always *exclude* the latest week, as that one is not finished yet and
-might give a biased impression.
+The data for dates after 26th of March is kindly provided by
+@[Narretz](https://twitter.com/Narretz) (click
+[here](https://invasion.pages.dev/)) who runs the Oryx source images
+through OCR in Azure Vision API. Since there could be errors in
+reporting, I only ever aggregate the data by week (not showing daily
+counts as that might be misleading). The graphs always *exclude* the
+latest week, as that one is not finished yet and might give a biased
+impression.
 
 ## Visualizations
 
