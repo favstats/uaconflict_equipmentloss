@@ -276,10 +276,14 @@ if(ocr_data_new){
 
   # oryx_data_dates_com %>% 
   #   filter(is.na(date)) %>% View
+  # oryx_data_dates %>% 
+  # filter(max(date, na.rm = T) == date) %>% View
   
-  oryx_data_dates_com <- oryx_data_dates %>%
+  oryx_data_dates_com <- oryx_data %>% 
+    # bind_rows(oryx_data %>% filter(timestamp > as.Date("2022-04-29"))) %>% 
     left_join(json_source) %>% 
-    mutate(date = if_else(is.na(date), date2, lubridate::as_date(date)))# %>% 
+    rename(date = date2)
+    # mutate(date = if_else(is.na(date), date2, lubridate::as_date(date)))# %>%
     # filter(max(date, na.rm = T) == date)
     # bind_rows(daily_dat) %>%
     # mutate(date = if_else(is.na(date), lubridate::as_date(timestamp), lubridate::as_date(date)))
