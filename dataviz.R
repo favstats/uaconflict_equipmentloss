@@ -362,7 +362,7 @@ if(ocr_data_new){
   vehicle_losses_time <- oryx_data_dates_com %>% 
     # filter(str_detect(equipment_type, "Tanks|Fighting|Personnel")) %>%
     mutate(date = lubridate::floor_date(date, "week", week_start = getOption("lubridate.week.start", 4))) %>% 
-    filter(date != max(date, na.rm = T)) %>% 
+    # filter(date != max(date, na.rm = T)) %>% 
     drop_na(cntry_army) %>% 
     count(cntry_army, date, equipment_type) %>% 
     filter(str_detect(equipment_type, "Tanks|Fighting|Personnel")) %>%
@@ -387,10 +387,39 @@ if(ocr_data_new){
   ggsave(plot = vehicle_losses_time, "img/vehicle_losses_time.png", width=14, height=9, dpi = 600, bg = "white")
   
   
+  artillery_losses_time <- oryx_data_dates_com %>% 
+    # filter(str_detect(equipment_type, "Tanks|Fighting|Personnel")) %>%
+    mutate(date = lubridate::floor_date(date, "week", week_start = getOption("lubridate.week.start", 4))) %>% 
+    # filter(date != max(date, na.rm = T)) %>% 
+    drop_na(cntry_army) %>% 
+    count(cntry_army, date, equipment_type) %>% 
+    filter(str_detect(equipment_type, "Artillery")) %>%
+    ggplot(aes(date, n, color = cntry_army)) +
+    geom_textline(size = 4.4, aes(label = cntry_army), hjust = 0.08) +
+    ggrepel::geom_text_repel(aes(label = n), seed = 2410191, size = 2.8, nudge_y = 1) +
+    geom_point(size = 0.8) +
+    facet_wrap(~equipment_type) +
+    # theme_minimal() + 
+    hrbrthemes::theme_ipsum() +
+    theme(legend.position = "none", 
+          plot.title = element_text(size = 36),
+          plot.subtitle = element_text(size = 15), plot.caption = element_text(size = 12),
+          strip.text = element_text(size = 15, face = "italic"), 
+          axis.title.x = element_text(size = 14), 
+          axis.title.y = element_text(size = 14)) +
+    scale_x_date(breaks = date_vec_fin, minor_breaks = NULL, labels = week_labs2_fin) +
+    labs(x = "Report Week", y = "Lost Vehicles per Week", title = "Vehicle Losses in Russia-Ukraine War 2022", subtitle = str_wrap("Lost vehicle means: captured, damaged, abandoned and/or destroyed. The data only records vehicle losses with photographic or videographic evidence. The quantity of actually lost equipment is therefore much higher and the data presented here can be seen as a 'lower bound' estimate for losses. Note: since this relies on publicly shared data there may also be a bias where losses for Ukraine and Russia are underreported or overreported, respectively.", width = 145), caption = glue::glue("Source: Oryxspioenkop. Data available here: https://github.com/favstats/uaconflict_equipmentloss.\nLast updated: {today()}.  Data scraping and visualization: Fabio Votta (@favstats)."))   +
+    scale_color_manual(values = c("darkred", "darkblue")) 
+  
+  
+  ggsave(plot = artillery_losses_time, "img/artillery_losses_time.png", width=14, height=9, dpi = 600, bg = "white")
+  
+  
+  
   tank_losses_time <- oryx_data_dates_com %>% 
     filter(str_detect(equipment_type, "Tanks")) %>% 
     mutate(date = lubridate::floor_date(date, "week", week_start = getOption("lubridate.week.start", 4))) %>% 
-    filter(date != max(date, na.rm = T)) %>% 
+    # filter(date != max(date, na.rm = T)) %>%
     drop_na(cntry_army) %>% 
     count(cntry_army, date, status)%>%
     filter(str_detect(status, "capture|estroye|aban")) %>%
@@ -417,7 +446,7 @@ if(ocr_data_new){
   tank_losses_time_cum <- oryx_data_dates_com %>% 
     filter(str_detect(equipment_type, "Tanks")) %>%
     mutate(date = lubridate::floor_date(date, "week", week_start = getOption("lubridate.week.start", 4))) %>% 
-    filter(date != max(date, na.rm = T)) %>% 
+    # filter(date != max(date, na.rm = T)) %>% 
     drop_na(cntry_army) %>% 
     count(cntry_army, date, status)%>%
     filter(str_detect(status, "capture|estroye|aban")) %>%
