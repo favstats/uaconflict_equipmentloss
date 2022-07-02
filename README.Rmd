@@ -71,6 +71,10 @@ The data for dates is kindly provided by @[Narretz](https://twitter.com/Narretz)
 
 ![](img/vehicle_losses_time.png)
 
+### Artillery losses over time 
+
+![](img/artillery_losses_time.png)
+
 ### Overall tank losses over time
 
 ![](img/tank_losses_time.png)

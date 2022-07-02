@@ -48,18 +48,18 @@ read_csv("data/daily/2022-03-26_oryx_data.csv")
 #> ℹ Use `spec()` to retrieve the full column specification for this data.
 #> ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 #> # A tibble: 1,798 × 13
-#>    equipment_type cntry_army flag     system status image_link  total_equipment…
-#>    <chr>          <chr>      <chr>    <chr>  <chr>  <chr>                  <dbl>
-#>  1 Tanks          Russia     https:/… T-64BV destr… https://i.…                7
-#>  2 Tanks          Russia     https:/… T-64BV destr… https://i.…                7
-#>  3 Tanks          Russia     https:/… T-64BV destr… https://i.…                7
-#>  4 Tanks          Russia     https:/… T-64BV destr… https://i.…                7
-#>  5 Tanks          Russia     https:/… T-64BV damag… https://i.…                7
-#>  6 Tanks          Russia     https:/… T-64BV captu… https://i.…                7
-#>  7 Tanks          Russia     https:/… T-64BV captu… https://i.…                7
-#>  8 Tanks          Russia     https:/… T-72A  destr… https://i.…                8
-#>  9 Tanks          Russia     https:/… T-72A  destr… https://i.…                8
-#> 10 Tanks          Russia     https:/… T-72A  captu… https://i.…                8
+#>    equipment_type cntry_army flag      system status image_link total_equipment…
+#>    <chr>          <chr>      <chr>     <chr>  <chr>  <chr>                 <dbl>
+#>  1 Tanks          Russia     https://… T-64BV destr… https://i…                7
+#>  2 Tanks          Russia     https://… T-64BV destr… https://i…                7
+#>  3 Tanks          Russia     https://… T-64BV destr… https://i…                7
+#>  4 Tanks          Russia     https://… T-64BV destr… https://i…                7
+#>  5 Tanks          Russia     https://… T-64BV damag… https://i…                7
+#>  6 Tanks          Russia     https://… T-64BV captu… https://i…                7
+#>  7 Tanks          Russia     https://… T-64BV captu… https://i…                7
+#>  8 Tanks          Russia     https://… T-72A  destr… https://i…                8
+#>  9 Tanks          Russia     https://… T-72A  destr… https://i…                8
+#> 10 Tanks          Russia     https://… T-72A  captu… https://i…                8
 #> # … with 1,788 more rows, and 6 more variables: total_system_oryx <dbl>,
 #> #   total_destroyed_oryx <dbl>, total_abandoned_oryx <dbl>,
 #> #   total_captured_oryx <dbl>, total_damaged_oryx <dbl>, timestamp <dttm>
@@ -69,24 +69,7 @@ read_csv("data/daily/2022-03-26_oryx_data.csv")
 
 ### OCR
 
-Each entry on the equipment loss list has an image or source associated
-to confirm the loss. In almost all cases the image includes a date which
-likely represent the date on which the media file was first seen by the
-Oryx team. In order to make use of this timestamp I employ
-`Google Cloud Vision API` to extract dates from images of the Oryx
-dateset.
-
-The cleaned dataset (with some manual coding) can be found here:
-`data/dates_dat.csv` and can be merged into the main dataset via the
-image link. If you prefer the merged dataset then you can use
-`date/oryx_data_dates.csv`.
-
-This dataset will only be updated every now and then as it requires some
-manual checking. Maybe I try to automate it further in the future :)
-
-### Weekly Updates
-
-The data for dates after 26th of March is kindly provided by
+The data for dates is kindly provided by
 @[Narretz](https://twitter.com/Narretz) (click
 [here](https://invasion.pages.dev/)) who runs the Oryx source images
 through OCR in Azure Vision API. Since there could be errors in
@@ -128,6 +111,10 @@ impression.
 ### Overall losses over time by (some) vehicle types
 
 ![](img/vehicle_losses_time.png)
+
+### Artillery losses over time
+
+![](img/artillery_losses_time.png)
 
 ### Overall tank losses over time
 
