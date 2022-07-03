@@ -393,7 +393,7 @@ if(ocr_data_new){
     # filter(date != max(date, na.rm = T)) %>% 
     drop_na(cntry_army) %>% 
     count(cntry_army, date, equipment_type) %>% 
-    filter(str_detect(equipment_type, "Artillery|Mortar")) %>%
+    filter(str_detect(equipment_type, "Artillery|Mortar|Multiple Rocket Launchers")) %>%
     ggplot(aes(date, n, color = cntry_army)) +
     # geom_textline(size = 4.4, aes(label = cntry_army), hjust = 0.08) +
     geom_line(size = 1.4) +
