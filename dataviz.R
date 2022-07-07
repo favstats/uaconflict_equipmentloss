@@ -331,7 +331,7 @@ if(ocr_data_new){
   overall_losses_time <- oryx_data_dates_com %>% 
     # filter(str_detect(equipment_type, "Tanks|Fighting|Personnel")) %>%
     mutate(date = lubridate::floor_date(date, "week", week_start = getOption("lubridate.week.start", 4))) %>% 
-    # filter(date != max(date, na.rm = T)) %>%
+    filter(date != max(date, na.rm = T)) %>%
     drop_na(cntry_army) %>% 
     count(cntry_army, date) %>% 
     ggplot(aes(date, n, color = cntry_army)) +
@@ -362,7 +362,7 @@ if(ocr_data_new){
   vehicle_losses_time <- oryx_data_dates_com %>% 
     # filter(str_detect(equipment_type, "Tanks|Fighting|Personnel")) %>%
     mutate(date = lubridate::floor_date(date, "week", week_start = getOption("lubridate.week.start", 4))) %>% 
-    # filter(date != max(date, na.rm = T)) %>% 
+    filter(date != max(date, na.rm = T)) %>%
     drop_na(cntry_army) %>% 
     count(cntry_army, date, equipment_type) %>% 
     filter(str_detect(equipment_type, "Tanks|Fighting|Personnel")) %>%
@@ -390,7 +390,7 @@ if(ocr_data_new){
   artillery_losses_time <- oryx_data_dates_com %>% 
     # filter(str_detect(equipment_type, "Tanks|Fighting|Personnel")) %>%
     mutate(date = lubridate::floor_date(date, "week", week_start = getOption("lubridate.week.start", 4))) %>% 
-    # filter(date != max(date, na.rm = T)) %>% 
+    filter(date != max(date, na.rm = T)) %>%
     drop_na(cntry_army) %>% 
     count(cntry_army, date, equipment_type) %>% 
     filter(str_detect(equipment_type, "Artillery|Mortar|Multiple Rocket Launchers")) %>%
@@ -422,7 +422,7 @@ if(ocr_data_new){
   tank_losses_time <- oryx_data_dates_com %>% 
     filter(str_detect(equipment_type, "Tanks")) %>% 
     mutate(date = lubridate::floor_date(date, "week", week_start = getOption("lubridate.week.start", 4))) %>% 
-    # filter(date != max(date, na.rm = T)) %>%
+    filter(date != max(date, na.rm = T)) %>%
     drop_na(cntry_army) %>% 
     count(cntry_army, date, status)%>%
     filter(str_detect(status, "capture|estroye|aban")) %>%
@@ -449,7 +449,7 @@ if(ocr_data_new){
   tank_losses_time_cum <- oryx_data_dates_com %>% 
     filter(str_detect(equipment_type, "Tanks")) %>%
     mutate(date = lubridate::floor_date(date, "week", week_start = getOption("lubridate.week.start", 4))) %>% 
-    # filter(date != max(date, na.rm = T)) %>% 
+    filter(date != max(date, na.rm = T)) %>%
     drop_na(cntry_army) %>% 
     count(cntry_army, date, status)%>%
     filter(str_detect(status, "capture|estroye|aban")) %>%
