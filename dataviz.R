@@ -335,7 +335,10 @@ if(ocr_data_new){
     drop_na(cntry_army) %>% 
     count(cntry_army, date) %>% 
     ggplot(aes(date, n, color = cntry_army)) +
-    geom_textline(size = 4.4, aes(label = cntry_army), hjust = 0.05) +
+    geom_textline( aes(label = cntry_army),
+                   size = 4.4,  hjust = 1
+    ) +
+    # geom_textline(size = 4.4, aes(label = cntry_army), hjust = 0.05) +
     ggrepel::geom_text_repel(aes(label = n), seed = 2410191, size = 2.8, nudge_y = nudger) +
     geom_point(size = 0.8) +
     ylim(0, NA)  +
