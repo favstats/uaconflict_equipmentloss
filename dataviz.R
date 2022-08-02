@@ -328,17 +328,23 @@ if(ocr_data_new){
   
   week_labs2_fin <- week_labs2[c(TRUE, FALSE)]
   
-  overall_losses_time <- oryx_data_dates_com %>% 
+  the_dat <- oryx_data_dates_com %>% 
     # filter(str_detect(equipment_type, "Tanks|Fighting|Personnel")) %>%
     mutate(date = lubridate::floor_date(date, "week", week_start = getOption("lubridate.week.start", 4))) %>% 
     filter(date != max(date, na.rm = T)) %>%
     drop_na(cntry_army) %>% 
-    count(cntry_army, date) %>% 
+    count(cntry_army, date) 
+  
+  overall_losses_time <- the_dat %>% 
     ggplot(aes(date, n, color = cntry_army)) +
-    geom_textline( aes(label = cntry_army),
-                   size = 4.4,  hjust = 1
-    ) +
+    # geom_textline( aes(label = cntry_army),
+    #                size = 4.4,  hjust = 1
+    # ) +
     # geom_textline(size = 4.4, aes(label = cntry_army), hjust = 0.05) +
+    geom_line(size = 0.8) +
+    geom_text(data = filter(the_dat, date == max(date)),
+              aes(label = cntry_army),
+              hjust = 0, nudge_x = 0.9) +
     ggrepel::geom_text_repel(aes(label = n), seed = 2410191, size = 2.8, nudge_y = nudger) +
     geom_point(size = 0.8) +
     ylim(0, NA)  +
@@ -350,7 +356,10 @@ if(ocr_data_new){
           plot.title = element_text(size = 20),
           plot.subtitle = element_text(size = 10), 
           axis.title.x = element_text(size = 12), 
-          axis.title.y = element_text(size = 12)) +
+          axis.title.y = element_text(size = 12),
+          plot.margin = margin(0.1, 0.6, 0.1, 0.1, "cm")) +
+    # Allow labels to bleed past the canvas boundaries
+    coord_cartesian(clip = 'off') +
     labs(x = "Report Week", y = "Lost Equipment per Week",
          title = "Vehicle and Equipment Losses in Russia-Ukraine War 2022", 
          subtitle = str_wrap("Lost equipment means: captured, damaged, abandoned and/or destroyed. The data only records vehicle and equipment losses with photographic or videographic evidence. The quantity of actually lost equipment is therefore much higher and the data presented here can be seen as a 'lower bound' estimate for losses. Small guns, ammo, civilian cars and trailers are not included. Note: since this relies on publicly shared data there may also be a bias where losses for Ukraine and Russia are underreported or overreported, respectively.", width = 150), 
